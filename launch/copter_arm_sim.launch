@@ -42,18 +42,26 @@
 		<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"  args="-urdf -model copter_arm -param robot_description" />
 	</group>
 
-	<!-- Load the generic PID controller -->
-	<node name="copter_arm_angle_controller" pkg="pid" type="controller" >
-		<param name="Kp" value="0.0" /> <!-- 90 -->
-		<param name="Ki" value="0.0" /> <!-- 15 -->
-		<param name="Kd" value="0.0" /> <!-- 2 -->
-		<param name="upper_limit" value="9999999" />
-		<param name="lower_limit" value="-9999999" />
-		<param name="windup_limit" value="500" />
-		<param name="diagnostic_period" value="0.25" />
-		<param name="max_loop_frequency" value="150.0" />
-		<param name="min_loop_frequency" value="100.0" />
-	</node>
+        <!-- Load the generic PID controller -->
+        <node name="copter_arm_angle_controller" pkg="pid" type="controller" >
+                <param name="Kp" value="0.0" /> <!-- 90 -->
+                <param name="Ki" value="0.0" /> <!-- 15 -->
+                <param name="Kd" value="0.0" /> <!-- 2 -->
+                <param name="upper_limit" value="9999999" />
+                <param name="lower_limit" value="-9999999" />
+                <param name="windup_limit" value="500" />
+                <param name="diagnostic_period" value="0.25" />
+                <param name="max_loop_frequency" value="150.0" />
+                <param name="min_loop_frequency" value="100.0" />
+
+                <remap from="state" to="state_limited" />
+        </node>
+
+        <!-- Fix the angle published by the free joint in case it starts rotating > 2*PI -->
+        <node name="angle_limitter" pkg="copter_arm_robot" type="state_filtered.py" output="screen" >
+            <remap from="input" to="state" />
+            <remap from="output" to="state_limited" />
+        </node>
 
 	<!-- mouse teleop -->
 	<include file="$(find mouse_teleop)/launch/mouse_teleop.launch">

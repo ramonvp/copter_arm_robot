@@ -27,11 +27,7 @@
 	</gazebo>
 
 	<joint name="free_joint" type="continuous">
-<<<<<<< HEAD
-                <origin xyz="0 0 1.0" rpy="1.5708 0 0"/>
-=======
 		<origin xyz="0 0 1.0" rpy="${0.5*pi} 0 0"/>
->>>>>>> carlos_original/master
 		<parent link="anchor"/>
 		<child link="arm"/>
 		<axis xyz="1 0 0"/>
